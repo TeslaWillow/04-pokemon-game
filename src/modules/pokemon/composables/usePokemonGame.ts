@@ -27,7 +27,7 @@ export const usePokemonGame = () => {
     return pokemonArray.sort(() => Math.random() - 0.5);
   };
 
-  const getNextOptions = (howMany: number = 4) => {
+  const getNextRound = (howMany: number = 4) => {
     gameStatus.value = GameStatus.Playing;
     pokemonsOptions.value = pokemons.value.slice(0, howMany); // 0 a 4 y retorna sin alterar el arreglo
     pokemons.value = pokemons.value.slice(howMany); // 4 para arrina
@@ -52,7 +52,7 @@ export const usePokemonGame = () => {
   // Al ser creado - onInit
   onMounted(async () => {
     pokemons.value = await getPokemons();
-    getNextOptions();
+    getNextRound();
   });
 
   return {
@@ -61,7 +61,7 @@ export const usePokemonGame = () => {
     pokemonsOptions,
     randomPokemon,
     // METHOD
-    getNextOptions,
+    getNextRound,
     checkAnswer,
   };
 };

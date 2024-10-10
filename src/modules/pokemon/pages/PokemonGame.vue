@@ -5,8 +5,15 @@
     </section>
 
     <section v-else class="flex flex-col justify-center items-center w-screen h-screen">
-        <div class="p-4 text-sm text-gray-800 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300" role="alert">
-            <span class="font-medium capitalize">{{ gameStatus }}</span>
+        
+        <div class="h-20">
+            <button
+                v-if="gameStatus !== GameStatus.Playing"
+                @click="getNextRound()"
+                class="bg-white shadow-md rounded-lg p-3 mb-5 cursor-pointer w-80 text-center transition-all hover:bg-blue-500 hover:text-white"
+            >
+                Volver a jugar
+            </button>
         </div>
 
         <h1 class="text-3xl mb-5">¿Quién es este pokemon?</h1>
@@ -40,6 +47,7 @@ const {
     randomPokemon,
     pokemonsOptions:options, // Renamed
     checkAnswer,
+    getNextRound,
 } = usePokemonGame();
 
 const onSelectedOptions = ( value: number ) => {

@@ -5,8 +5,8 @@
             :key="id"
             :disabled="blockSelection"
             :class="['option', {
-                correct:   blockSelection && id === correctAnswer.id,
-                incorrect: blockSelection && id !== correctAnswer.id,
+                correct:   blockSelection && (id === correctAnswer.id),
+                incorrect: blockSelection && (id !== correctAnswer.id),
             }]"
             @click="$emit('selectedOption', id)"
         >

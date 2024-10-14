@@ -30,7 +30,7 @@ export const usePokemonGame = () => {
   const getNextRound = (howMany: number = 4) => {
     gameStatus.value = GameStatus.Playing;
     pokemonsOptions.value = pokemons.value.slice(0, howMany); // 0 a 4 y retorna sin alterar el arreglo
-    pokemons.value = pokemons.value.slice(howMany); // 4 para arrina
+    pokemons.value = pokemons.value.slice(howMany); // 4 para arriba
   };
 
   const checkAnswer = (id: number) => {

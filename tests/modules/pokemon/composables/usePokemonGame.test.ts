@@ -7,14 +7,19 @@ import { GameStatus } from '@pokemon/interfaces/game-status.enum';
 import { withSetup } from '../../../../tests/utils/with-setup';
 import { pokemonListFake } from '../../../../tests/data/fake-pokemon';
 
+import confetti from 'canvas-confetti';
+
 const mockPokemonApi = new MockAdapter(pokemonApi);
 mockPokemonApi.onGet('/?limit=151').reply(200, {
   results: pokemonListFake,
 });
+vi.mock('canvas-confetti', () => ({
+  default: vi.fn(),
+}));
 
 describe('usePokemonGame', () => {
   test('should initialize w/ the correct default values', async () => {
-    const [result, app] = withSetup(usePokemonGame);
+    const [result] = withSetup(usePokemonGame);
     expect(result.gameStatus.value).toBe(GameStatus.Playing);
     expect(result.isLoading.value).toBeTruthy();
     expect(result.pokemonsOptions.value).toEqual([]);
@@ -31,7 +36,7 @@ describe('usePokemonGame', () => {
   });
 
   test('Should correctly handle getNextRound', async () => {
-    const [result, app] = withSetup(usePokemonGame);
+    const [result] = withSetup(usePokemonGame);
 
     await flushPromises();
 
@@ -45,7 +50,7 @@ describe('usePokemonGame', () => {
   });
 
   test('Should correctly habdle getNextRound and return diferent pokemons', async () => {
-    const [result, app] = withSetup(usePokemonGame);
+    const [result] = withSetup(usePokemonGame);
 
     await flushPromises();
 
@@ -67,5 +72,23 @@ describe('usePokemonGame', () => {
     expect(result.gameStatus.value).toBe(GameStatus.Playing);
     expect(nextOptions).not.toEqual(originalOptions);
     expect(hasntDuplicates).toBeTruthy();
+  });
+
+  test('Should correctly handle a incorrect answer', async () => {
+    const [result] = withSetup(usePokemonGame);
+
+    await flushPromises();
+
+    const { checkAnswer, gameStatus, randomPokemon } = result;
+
+    expect(gameStatus.value).toBe(GameStatus.Playing);
+    checkAnswer(randomPokemon.value.id);
+
+    expect(confetti).toHaveBeenCalledWith({
+      particleCount: 300,
+      spread: 150,
+      origin: { y: 0.6 },
+    });
+    expect(gameStatus.value).toBe(GameStatus.Won);
   });
 });
